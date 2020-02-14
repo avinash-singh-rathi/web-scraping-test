@@ -27,6 +27,7 @@ class CreateProductsTable extends Migration
             $table->integer('moq')->nullable();
             $table->integer('poq')->nullable();
             $table->boolean('pricementioned')->default(0);
+            $table->boolean('isvariant')->default(0);
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories');

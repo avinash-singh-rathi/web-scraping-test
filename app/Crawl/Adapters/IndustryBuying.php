@@ -8,7 +8,7 @@ class IndustryBuying implements CrawlLinksInterface{
 
   public $link;
   private $data=[];
-  private $process = FALSE;
+  private $processed = FALSE;
 
   function __construct($link){
     $this->link = $link;
@@ -18,8 +18,10 @@ class IndustryBuying implements CrawlLinksInterface{
   private function process(){
     $crawler = Goutte::request('GET', $this->link);
     $results = array();
-    $crawler->filter('.AH_ProductView .proColBox .proPicImg a')->each(function ($node) use (&$results) {
-      $results[] = $node->attr('href');
+    $crawler->filter('.AH_ProductView .proColBox')->each(function ($node) use (&$results) {
+      //$results[]['link'] = $node->attr('href');
+      $results[]['link']=$node->filter('.proPicImg a')->eq(0)->attr('href');
+      $results[]['brand']=$node->filter('.proSmDetail .by a')->eq(0)->text();
     });
     $pageinfo;
     $crawler->filter('.AH_ProductsLimit .productslimit')->each(function ($node) use (&$pageinfo) {
@@ -29,25 +31,26 @@ class IndustryBuying implements CrawlLinksInterface{
     $this->data['links']=$result;
     $this->data['totalitems'] = $matches[2];
     $this->data['totalpages'] = $matches[2] / ($matches[1] - $matches[0] + 1);
+    $this->processed=TRUE;
   }
 
   function getLinks(){
-    if(!$this->process){
-      $this->process;
+    if(!$this->$processed){
+      $this->process();
     }
     return $this->data['links'];
   }
 
   function getTotalItems(){
-    if(!$this->process){
-      $this->process;
+    if(!$this->$processed){
+      $this->process();
     }
     return $this->data['totalitems'];
   }
 
   function getTotalPages(){
-    if(!$this->process){
-      $this->process;
+    if(!$this->$processed){
+      $this->process();
     }
     return $this->data['totalpages'];
   }

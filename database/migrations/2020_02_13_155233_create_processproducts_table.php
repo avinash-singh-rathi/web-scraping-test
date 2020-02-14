@@ -16,6 +16,7 @@ class CreateProcessproductsTable extends Migration
         Schema::create('processproducts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('url');
+            $table->string('brand')->nullable();
             $table->unsignedBigInteger('processlink_id');
             $table->string('batch');
             $table->boolean('last')->default(0);

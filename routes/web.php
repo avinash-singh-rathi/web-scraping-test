@@ -20,26 +20,16 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/hdtuto', function() {
 
-    $crawler = Goutte::request('GET', 'https://www.industrybuying.com/safety-1224/safety-shoes-2423/');
+    $crawler = Goutte::request('GET', 'https://www.industrybuying.com/safety-shoes-allen-cooper-FAM67410/');
 
-    $count=0;
-    $test = array();
-    $crawler->filter('.AH_ProductView .proColBox .proPicImg a')->each(function ($node) use (&$test) {
-      $test[] = $node->attr('href');
-      dump("https://www.industrybuying.com".$node->attr('href'));
-
+    $result=[];
+    $crawler->filter('#family-table tbody tr')->each(function ($node) use (&$result) {
+      $name = $node->filter('td')->eq(0)->text()." - ".$node->filter('td')->eq(1)->text()." - ".$node->filter('td')->eq(2)->text();
+      $price= $node->filter('td')->eq(3)->filter('.family-price')->eq(0)->text();
+      $mrp= $node->filter('td')->eq(3)->filter('.strike')->eq(0)->text();
+      $discount= $node->filter('td')->eq(3)->filter('.discount')->eq(0)->text();
+      $gst = $node->filter('td')->eq(3)->filter('.gstmsg')->eq(0)->text();
+      $result['variants'][]=['name' => $name, 'price' => $price, 'mrp' => $mrp,'discount' => $discount, 'gst' => $gst];
     });
-    echo "<pre>";
-    print_r($test);
-    $pageinfo;
-    $crawler->filter('.AH_ProductsLimit .productslimit')->each(function ($node) use (&$pageinfo) {
-      $pageinfo=$node->text();
-      dump($node->text());
-
-    });
-    //print_r($node);
-    echo "\nTotal Products: ".$count." Page Info: ".$pageinfo."\n";
-    preg_match_all('!\d+!', $pageinfo, $matches);
-    print_r($matches);
 });
 Route::middleware('auth')->get('/{any?}', 'HomeController@index')->name('dashboard');
