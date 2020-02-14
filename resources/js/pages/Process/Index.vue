@@ -1,9 +1,9 @@
 <template>
   <div class="">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Categories</h1>
+            <h1 class="h2">Crawl Processes</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
-              <router-link class="btn btn-sm btn-outline-secondary mr-2" :to="{ name: 'AddCategory'}"> Add Category</router-link>
+              <router-link class="btn btn-sm btn-outline-secondary mr-2" :to="{ name: 'AddProcess'}"> Add Process</router-link>
               <div class="btn-group mr-2">
                 <input type="text" v-model="searchinput" name="" value="">
                 <button @click.prevent="search" class="btn btn-sm btn-outline-secondary">Search</button>
@@ -12,20 +12,26 @@
       </div>
       <div class="row">
         <div class="col-md-10">
-          <div v-if="CategoriesData != undefined && CategoriesData.length > 0" class="">
+          <div v-if="ProcessesData != undefined && ProcessesData.length > 0" class="">
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th scope="col">Category</th>
-                  <th scope="col">Url</th>
-                  <th scope="col">Website</th>
+                  <th scope="col">Link</th>
+                  <th scope="col">Total Products</th>
+                  <th scope="col">Total Pages</th>
+                  <th scope="col">Processed Pages</th>
+                  <th scope="col">Products Per Page</th>
+                  <th scope="col">Status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="cat in CategoriesData">
-                  <td>{{cat.name}}</td>
-                  <td>{{cat.url}}</td>
-                  <td>{{cat.website.name}}</td>
+                <tr v-for="proc in ProcessesData">
+                  <td>{{proc.url}}</td>
+                  <td>{{proc.totalitems}}</td>
+                  <td>{{proc.totalpages}}</td>
+                  <td>{{proc.processedpages}}</td>
+                  <td>{{proc.totalitemsperpage}}</td>
+                  <td>{{proc.status}}</td>
                 </tr>
               </tbody>
             </table>
@@ -34,13 +40,13 @@
 
               </div>
               <div class="col-md-6">
-                <pagination :pagedata="categories" @clicked="GetCategories"></pagination>
+                <pagination :pagedata="processes" @clicked="GetProcesses"></pagination>
               </div>
             </div>
 
           </div>
           <div v-else class="">
-            No Category to show. <router-link class="btn btn-sm btn-outline-secondary mr-2" :to="{ name: 'AddCategory'}"> Create</router-link> one.
+            No Processes to show. <router-link class="btn btn-sm btn-outline-secondary mr-2" :to="{ name: 'AddProcess'}"> Create</router-link> one.
           </div>
 
         </div>
@@ -64,13 +70,13 @@ export default {
     pagination
   },
   computed:{
-    ...mapGetters(["categories"]),
-    CategoriesData(){
-      return this.categories.data
+    ...mapGetters(["processes"]),
+    ProcessesData(){
+      return this.processes.data
     }
   },
   methods:{
-    ...mapActions(["GetCategories"]),
+    ...mapActions(["GetProcesses"]),
       search(e){
         //Action will go here
         this.GetCategories('?search='+this.searchinput);
@@ -78,7 +84,7 @@ export default {
 
   },
   created(){
-      this.GetCategories();
+      this.GetProcesses();
   }
 }
 </script>

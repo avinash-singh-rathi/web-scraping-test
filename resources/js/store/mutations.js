@@ -19,9 +19,12 @@ export default {
       state.brands=data;
     },
     SetWBrands(state,data){
-      state.Wbrands=data;
+      state.wBrands=data;
     },
     SetWCategories(state,data){
-      state.Wcategories=data;
+      state.wCategories=data;
     },
+    SetProcesses(state,data){
+      state.processes=data;
+    }
 };

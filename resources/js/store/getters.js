@@ -8,4 +8,5 @@ export default {
     brands: state => state.brands,
     wCategories: state => state.wCategories,
     wBrands: state => state.wBrands,
+    processes: state => state.processes,
 };

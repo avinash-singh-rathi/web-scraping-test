@@ -22,8 +22,10 @@ class CreateProcesslinksTable extends Migration
             $table->integer('totalitemsperpage')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
+            $table->unsignedBigInteger('website_id')->nullable();
             $table->enum('status',['completed','processing','pending'])->nullable();
             $table->timestamps();
+            $table->foreign('website_id')->references('id')->on('websites');
         });
     }
 

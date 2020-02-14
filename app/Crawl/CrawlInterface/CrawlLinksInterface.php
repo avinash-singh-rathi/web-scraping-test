@@ -14,5 +14,7 @@ interface CrawlLinksInterface{
   //This function will return total number of pages
   public function getTotalPages();
 
+  //This function will return the products per page
+  public function getProductsPerPage();
 
 }

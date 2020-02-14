@@ -28,9 +28,10 @@ class CreateProductsTable extends Migration
             $table->integer('poq')->nullable();
             $table->boolean('pricementioned')->default(0);
             $table->boolean('isvariant')->default(0);
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('brand_id')->nullable();
+            $table->string('category_url')->nullable();
             $table->timestamps();
-            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

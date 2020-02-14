@@ -17,4 +17,9 @@ class Website extends Model
     {
         return $this->hasMany('App\Model\Brand');
     }
+
+    public function processlinks()
+    {
+        return $this->hasMany('App\Model\Processlink');
+    }
 }

@@ -15,14 +15,26 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th scope="col">Website</th>
-                  <th scope="col">Url</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">MRP</th>
+                  <th scope="col">Discount</th>
+                  <th scope="col">Variants</th>
+                  <th scope="col">QuoteOnly</th>
+                  <th scope="col">Brand</th>
+                  <th scope="col">MOQ</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="web in ProductsData">
-                  <td>{{web.name}}</td>
-                  <td>{{web.url}}</td>
+                  <td><a :href="web.url" target="_blank">{{web.name}}</a></td>
+                  <td>{{web.price}}</td>
+                  <td>{{web.mrp}}</td>
+                  <td>{{web.discount}}</td>
+                  <td>{{web.isvariant | isQuote }}</td>
+                  <td>{{web.ispricementioned | isQuote }}</td>
+                  <td>{{web.brand}}</td>
+                  <td>{{web.moq}}</td>
                 </tr>
               </tbody>
             </table>
@@ -53,6 +65,11 @@ export default {
   data(){
     return {
       searchinput:'',
+    }
+  },
+  filters:{
+    isQuote(value){
+        return value ? 'Yes' : "No";
     }
   },
   components:{

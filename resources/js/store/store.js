@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
         products:[],
         wCategories:[],
         wBrands:[],
+        processes:[],
         configs:{
             apiUrl:'/api/'
         }

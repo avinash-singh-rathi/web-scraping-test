@@ -6,6 +6,7 @@ use App\Crawl\CrawlInterface\CrawlProductInterface;
 use App\Crawl\CrawlInterface\CommonTrait;
 use Goutte;
 
+
 class IndustryBuyingProduct implements CrawlProductInterface{
 
   use CommonTrait;
@@ -21,17 +22,25 @@ class IndustryBuyingProduct implements CrawlProductInterface{
   private function process(){
     $crawler = Goutte::request('GET', $this->link);
     $result=[];
-    $result['image_url']=$crawler->filter('.zoom_img')->eq(0)->attr('data-zoom-image');
+    $result['image_url']='https:'.$crawler->filter('.zoom_img')->eq(0)->attr('data-zoom-image');
 
     $crawler->filter('.pdpContent .heading .productTitle h1')->each(function ($node) use (&$result) {
       $result['name']=$node->text();
     });
 
+    $result['category_url']=$this->getDomainName($this->link).trim($crawler->filter('.commonBreadCrums span a')->last()->attr('href'));
+
     if(isset($result['name'])){
       //Code section started for Normal Product Page without variant
-      $result['isvariant'] = FASLE;
+      $result['isvariant'] = FALSE;
 
-      $result['isQuote']=$crawler->filter('#quot_form_app')->eq(0)->text() ? TRUE : FALSE;
+      $result['isQuote']=FALSE;
+
+      $crawler->filter('#quot_form_app')->each(function ($node) use (&$result) {
+        $result['isQuote']=TRUE;;
+      });
+
+      //$result['isQuote']=$crawler->filter('#quot_form_app')->eq(0)->text() ? TRUE : FALSE;
 
       if($result['isQuote']){
         $result['mrp']=$crawler->filter('#quot_form_app .quot_form_app')->eq(0)->text() ?? NULL;
@@ -47,7 +56,7 @@ class IndustryBuyingProduct implements CrawlProductInterface{
         $result['gst']=$crawler->filter('#AH_TaxInclusivePrice .AH_PricePerPiece')->eq(0)->text();
         $moqarea=$crawler->filter('.pricePerPieceArea.ah-show-moq')->eq(0)->text();
         preg_match_all('!\d+!', $moqarea, $moq);
-        $result['moq']=$moq[0];
+        $result['moq']=$moq[0][0];
         $result['poq']=NULL;
       }
 
@@ -71,6 +80,7 @@ class IndustryBuyingProduct implements CrawlProductInterface{
       //Code section finished for Variant Type Products
     }
     $this->data=$result;
+
   }
 
   private function checkProcess(){
@@ -143,6 +153,11 @@ class IndustryBuyingProduct implements CrawlProductInterface{
   function getVariants(){
     $this->checkProcess();
     return $this->data['variants'];
+  }
+
+  function getCategoryUrl(){
+    $this->checkProcess();
+    return $this->data['category_url'];
   }
 
 }

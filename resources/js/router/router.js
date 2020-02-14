@@ -75,6 +75,22 @@ let routes = [
           },
         ]
     },
+    {
+        path: '/products',
+        component: { render: h => h('router-view') },
+        children:[
+          {
+            path: '',
+            name: 'products',
+            component: require('../pages/Products/Index.vue').default,
+          },
+          {
+              path: 'show/:id',
+              name: 'ShowProduct',
+              component: require('../pages/Products/Show.vue').default
+          },
+        ]
+    },
 
 
 ];

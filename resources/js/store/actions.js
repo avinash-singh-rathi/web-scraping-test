@@ -120,7 +120,7 @@ export default {
     //Function to get categories by website
     GetCategoriesByWebsite({ commit, getters },value=''){
         return new Promise((resolve, reject) => {
-            Vue.http.get(getters.apiUrl+'categories/'+value+'/website').then(
+            Vue.http.get(getters.apiUrl+'category/'+value+'/website').then(
                         function (response) {
                             commit('SetWCategories', response.data)
                             resolve(response);
@@ -130,5 +130,30 @@ export default {
             });
     },
 
+    //Get Processes
+    GetProcesses({ commit, getters },value=''){
+        return new Promise((resolve, reject) => {
+            Vue.http.get(getters.apiUrl+'process'+value).then(
+                        function (response) {
+                            commit('SetProcesses', response.data)
+                            resolve(response);
+                        }, function (error) {
+                            reject(error);
+                        });
+            });
+    },
+
+    //Create Process
+    CreateProcess({commit, getters},form){
+      return new Promise((resolve, reject) => {
+          Vue.http.post(getters.apiUrl+'process',form).then(
+                      function (response) {
+                          //commit('setWebsites', response.data)
+                          resolve(response.data);
+                      }, function (error) {
+                          reject(error);
+                      });
+        });
+    },
 
 };

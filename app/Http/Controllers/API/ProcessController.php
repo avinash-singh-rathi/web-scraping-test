@@ -4,9 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\Processlink;
+use App\Model\{Processlink, Brand, Category};
 use App\Http\Resources\Process\{ProcesslinkResource, ProcesslinkCollection};
 use Validator;
+use App\Jobs\ProcessLinksJob;
 
 
 class ProcessController extends Controller
@@ -36,12 +37,25 @@ class ProcessController extends Controller
      */
     public function store(Request $request)
     {
+      $url;
+      if($request->category_id != NULL){
+        $category = Category::find($request->category_id);
+        $url=$category->url;
+      }
+
+      if($request->brand_id != NULL){
+        $brand = Brand::find($request->brand_id);
+        $url=$brand->url;
+      }
+
       $processlink=new Processlink();
-      $processlink->url = $request->url;
+      $processlink->url = $url;
+      $processlink->website_id = $request->website_id;
       $processlink->brand_id = $request->brand_id;
       $processlink->category_id = $request->category_id;
       $processlink->status = 'pending';
       $processlink->save();
+      ProcessLinksJob::dispatch($processlink);
       return new ProcesslinkResource($processlink);
     }
 
